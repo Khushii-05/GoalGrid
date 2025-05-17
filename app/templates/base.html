@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GoalGrid{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Include your existing cyberpunk fonts and icons -->
+</head>
+<body>
+    <nav class="cyber-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('main.index') }}" class="app-title">
+                <span class="cyber-glitch">Goal</span><span class="cyber-glitch">Grid</span>
+            </a>
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <span class="cyber-text">USER: {{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="cyber-button">LOGOUT</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="cyber-button">LOGIN</a>
+                    <a href="{{ url_for('auth.register') }}" class="cyber-button">REGISTER</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="cyber-alert cyber-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoalGrid - Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cyber-particles"></div>
+    <div class="cyber-grid-bg"></div>
+    <div class="cyber-scanner-line"></div>
+    
+    <nav class="cyber-nav">
+        <div class="nav-container">
+           <h1 class="app-title">Goal<span style="color: var(--secondary-color)">Grid</span></h1>
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <span class="cyber-text">USER: {{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="cyber-button">LOGOUT</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="cyber-button">LOGIN</a>
+                    <a href="{{ url_for('auth.register') }}" class="cyber-button">REGISTER</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="cyber-alert cyber-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="tagline-container">
+            <div class="cyber-tagline-small">Access Your Mission. Conquer Your Goals.</div>
+            <div class="cyber-tagline-large">WELCOME TO THE GRID</div>
+        </div>
+        
+        <div class="cyber-layout">
+            <div class="cyber-decorations left">
+                <div class="cyber-hex"></div>
+                <div class="cyber-circuit"></div>
+                <div class="cyber-stat-box">
+                    <div class="stat-title">SYSTEM STATUS</div>
+                    <div class="stat-value">ONLINE</div>
+                </div>
+            </div>
+            
+            <div class="cyber-form-container">
+                <div class="cyber-card">
+                    <div class="cyber-card-header">
+                        <h2 class="cyber-glitch">NEW OPERATIVE REGISTRATION</h2>
+                    </div>
+                    <div class="cyber-card-body">
+                        <form method="POST" class="cyber-form">
+                            {{ form.hidden_tag() }}
+                            <div class="cyber-form-group">
+                                {{ form.username.label(class="cyber-label") }}
+                                {{ form.username(class="cyber-input", placeholder="Choose your code name") }}
+                                {% for error in form.username.errors %}
+                                    <span class="cyber-error">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="cyber-form-group">
+                                {{ form.email.label(class="cyber-label") }}
+                                {{ form.email(class="cyber-input", placeholder="Enter your secure email") }}
+                                {% for error in form.email.errors %}
+                                    <span class="cyber-error">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="cyber-form-group">
+                                {{ form.password.label(class="cyber-label") }}
+                                {{ form.password(class="cyber-input", placeholder="Choose a strong password") }}
+                                {% for error in form.password.errors %}
+                                    <span class="cyber-error">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="cyber-form-group">
+                                {{ form.password2.label(class="cyber-label") }}
+                                {{ form.password2(class="cyber-input", placeholder="Verify your password") }}
+                                {% for error in form.password2.errors %}
+                                    <span class="cyber-error">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {{ form.submit(class="cyber-button", value="Create Account") }}
+                        </form>
+                        <div class="cyber-link">
+                            Already registered? <a href="{{ url_for('auth.login') }}">Access System</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cyber-decorations right">
+                <div class="cyber-hex"></div>
+                <div class="cyber-circuit"></div>
+                <div class="cyber-stat-box">
+                    <div class="stat-title">SUCCESS RATE</div>
+                    <div class="stat-value counter">89%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Particles animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create particles
+            const particles = document.querySelector('.cyber-particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                
+                // Random size
+                const size = Math.random() * 4 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random animation duration
+                particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                
+                particles.appendChild(particle);
+            }
+            
+            // Scanner animation
+            const scanner = document.querySelector('.cyber-scanner-line');
+            scanner.style.animation = 'scanline 8s linear infinite';
+            
+            // Counter animation for stats
+            const counter = document.querySelector('.counter');
+            const targetValue = parseInt(counter.textContent.replace(/\D/g, ''));
+            let currentValue = 0;
+            
+            const updateCounter = () => {
+                if (currentValue < targetValue) {
+                    currentValue += Math.ceil(targetValue / 100);
+                    if (currentValue > targetValue) currentValue = targetValue;
+                    counter.textContent = currentValue + '%';
+                    requestAnimationFrame(updateCounter);
+                }
+            };
+            
+            counter.textContent = '0%';
+            setTimeout(updateCounter, 1000);
+        });
+    </script>
+</body>
+</html>
