@@ -25,6 +25,7 @@ var/
 # Flask
 instance/
 .webassets-cache
+/migrations/
 
 # Virtual Environment
 venv/
