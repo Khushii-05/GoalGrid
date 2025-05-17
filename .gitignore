@@ -1,7 +1,12 @@
 # Write basic content to .gitignore
 @"
 # Python
-__pycache__/
+# .dockerignore
+instance/
+migrations/
+.env
+*.pyc
+__pycache__
 *.py[cod]
 *$py.class
 *.so

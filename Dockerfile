@@ -1,9 +1,8 @@
-# Dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install system dependencies required for Python packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     python3-dev \
@@ -19,21 +18,18 @@ COPY . .
 # Set environment variables
 ENV FLASK_APP=run.py
 ENV FLASK_ENV=production
-ENV FLASK_DEBUG=0
 
-# Database initialization and migrations
+# Clean initialization
 RUN mkdir -p instance && \
-    if [ -d "migrations" ]; then rm -rf migrations; fi && \
+    rm -rf migrations && \
     flask db init && \
-    flask db migrate -m "Initial migration" && \
+    flask db migrate --message "Initial production DB" && \
     flask db upgrade
 
-# Copy and prepare startup script
+# Start script
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Expose the application port
 EXPOSE 5000
 
-# Run the application
 CMD ["/start.sh"]
